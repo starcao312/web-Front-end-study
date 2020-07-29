@@ -281,11 +281,102 @@
          2. 原生 JS 中 className 会覆盖元素原先里面的类名，jQuery 里面类操作只是对指定类进行操作，不影响原先的类名。
 
    2. 属性操作
+      - 元素固有属性值：prop()
+        - prop('属性')
+        - prop('属性', '属性值')
+     - 注意：prop() 除了普通属性操作，更适合操作表单属性：disabled / checked / selected 等。
+      - 元素自定义属性值：attr()
+        - attr('属性')
+        - attr('属性', '属性值')
+        - 注意：attr() 除了普通属性操作，更适合操作自定义属性。（该方法也可以获取 H5 自定义属性）
+      - 数据缓存：data()
+        - data('name')
+        - data('name', 'value')
+        - 注意：同时，还可以读取 HTML5 自定义属性  data-index ，得到的是数字型。
+      
+   3. 文本操作
+
       - `$('#i1').html()`		// 获取html内容
       - `$('#i1').html('<span>123<span>')`	// 设置html内容
       - `text()`、`val()`
 
-   3. 文本操作
+   4. 元素操作
+
+      1. each()
+
+         1. 语法1：
+
+            ```js
+            $('div').each(function (index, domElement) {});
+            ```
+
+            1. each() 方法遍历匹配每一个元素，主要用于 DOM 操作，each 每一个
+            2. 里面的回调函数有两个参数，index 是每个元素的索引号，domElement 是每个 DOM 元素对象，不是 jQuery 对象
+            3. 所以想要使用 jQuery 方法，需要将这个 dom 对象转化为 jQuery 对象
+            4. 注意：此方法用于遍历 jQuery 对象中的每一项，回调函数中元素为 DOM 对象，想要使用 jQuery 方法需要转换。
+
+         2. 语法2：
+
+            ```js
+            $.each(object, function (index, element) {});
+            ```
+
+            1. $.each() 方法可用于遍历任何对象，主要用于处理数据，比如数组，对象
+            2. 里面的函数有两个参数：index 是每个元素的索引号，element 是遍历内容
+            3. 注意：此方法用于遍历 jQuery 对象中的每一项，回调函数中元素为 DOM 对象，想要使用 jQuery 方法需要转换。
+
+      2. 创建、添加、删除
+
+         1. 创建
+
+            ```js
+            $('<li></li>');
+            ```
+
+            动态创建了一个 `<li>` 标签
+
+         2. 内部添加
+
+            ```js
+            element.append('内容');
+            ```
+
+            把内容放入匹配元素最后面，类似原生 appendChild。
+
+            ```js
+            element.prepend('内容')
+            ```
+
+            把内容放入匹配元素内部最前面
+
+         3. 外部添加
+
+            ```js
+            element.after('内容');
+            ```
+
+            把内容放到元素目标后面
+
+            ```js
+            element.before('内容');
+            ```
+
+            把内容放到目标元素前面
+
+            1. 内部添加元素，生成之后，他们是父子关系
+            2. 外部添加元素，生成之后，他们是兄弟关系
+
+         4. 删除元素
+
+            ```js
+            element.remove();	// 删除匹配的元素（本身）
+            element.empty();	// 删除匹配的元素集合中的所有的子节点
+            element.html('');	// 清空匹配的元素的内容
+            ```
+
+            1. remove() 删除元素本身
+            2. empty() 和 html('') 作用等价，都可以删除元素里面的内容，只不过 html() 还可以设置内容。
+            3. 注意：以上只是元素的创建、添加、删除方法的常用方法，其他方法请参详API。
 
 9. jQuery 效果
 
@@ -435,6 +526,134 @@
 
 10. 事件：
 
+    1. 事件注册
+
+       1. jQuery 为我们提供了方便的事件注册机制，是开发人员抑郁操作优缺点如下：
+       2. 优点: 操作简单，且不用担心事件覆盖等问题。
+       3. 缺点: 普通的事件注册不能做事件委托，且无法实现事件解绑，需要借助其他方法。
+
+    2. 事件处理
+
+       1. 事件处理 on() 绑定事件
+
+          1. 因为普通注册事件方法的不足，jQuery又创建了多个新的事件绑定方法bind() / live() / delegate() / on()等，其中最好用的是: on()
+
+          2. on() 方法优势1：
+
+             1. 可以绑定多个事件，多个事件处理程序
+
+                ```js
+                $('div').on({
+                    click: function () {},
+                    mouseenter: function () {},
+                    mouseleave: function () {},
+                });
+                ```
+
+                如果事件处理程序相同
+
+                ```js
+                $('div').on("mouseenter mouseleave", function(){});
+                ```
+
+          3. on() 方法优势2：
+
+             1. 可以委派事件操作。事件委派定义是：**把原本加给子元素身上的事件绑定在父元素身上，就是把事件委派给父元素。**
+
+                ```js
+                $('ul').on('click', 'li', function(){});
+                ```
+
+                在此之前有bind()，live()，delegate() 等方法来处理事件绑定或者事件委托，最新版本的使用 on() 来代替他们
+
+          4. on() 方法优势3
+
+             1. on可以给未来动态创建的元素绑定事件
+
+                ```js
+                $("ol").on("click", "li", function() {
+                    alert(11);
+                })
+                var li = $("<li>我是后来创建的</li>");
+                $("ol").append(li);
+                ```
+
+       2. 事件处理 off() 解绑事件
+
+          1. 当某个事件上面的逻辑，在特定需求下不需要的时候，可以把该事件上的逻辑移除，这个过程我们称为事件解绑。jQuery 为我们提供 了多种事件解绑方法：die() / undelegate() / off() 等，甚至还有只触发一次的事件绑定方法 one()，在这里我们重点讲解一下 off() ;
+
+          2. 语法
+
+             1. off() 方法可以移除通过 on() 方法添加的事件处理程序
+
+                ```js
+                $("div").off();  // 这个是解除了div身上的所有事件
+                $("div").off("click"); // 这个是解除了div身上的点击事件
+                $("ul").off("click", "li");
+                ```
+
+             2. 如果有的事件只想触发一次，可以使用 one() 来绑定事件
+
+                ```js
+                // one() 只能触发事件一次
+                $("p").one("click", function() {})
+                ```
+
+       3. 事件处理 trigger() 自动触发事件
+
+          1. 有些时候，在某些特定的条件下，我们希望某些事件能够自动触发, 比如轮播图自动播放功能跟点击右侧按钮一致。可以利用定时器自动触发右侧按钮点击事件，不必鼠标点击触发。由此 jQuery 为我们提供了两个自动触发事件 trigger() 和 triggerHandler() ; 
+
+          2. 语法：
+
+             1. trigger()
+
+                ```js
+                element.click();		// 第一种简写方式
+                element.trigger('click');// 第二种自动触发模式
+                ```
+
+             2. triggerHandler()
+
+                ```js
+                element.triggerHandler('click');// 第三种自动触发模式
+                ```
+
+             3. triggerHandler模式不会触发元素的默认行为，这是和前面两种的区别
+
+    3. jQuery 事件对象
+
+       1. jQuery 对DOM中的事件对象 event 进行了封装，兼容性更好，获取更方便，使用变化不大。事件被触发，就会有事件对象的产生。
+
+          ```js
+          element.on(events, [selector], function(event){});
+          ```
+
+          阻止默认行为：event.preventDefault() 或者 return false;
+
+          阻止冒泡：event.stopPropagation()
+
+       2. 注意：jQuery中的 event 对象使用，可以借鉴 API 和 DOM 中的 event 。
+
+    4. jQuery 拷贝对象
+
+       1. jQuery中分别为我们提供了两套快速获取和设置元素尺寸和位置的API，方便易用，内容如下。
+
+       2. 语法
+
+          ![jQuery 拷贝对象](G:\桌面文件\学习\前端学习\笔记\笔记图片\extend.png)
+
+    5. jQuery 多库共存
+
+       1. 实际开发中，很多项目连续开发十多年，jQuery版本不断更新，最初的 jQuery 版本无法满足需求，这时就需要保证在旧有版本正常运行的情况下，新的功能使用新的jQuery版本实现，这种情况被称为，jQuery 多库共存。
+
+       2. 语法
+
+          jQuery 解决办法：
+
+          1. 把里面的 $ 符号统一改为 jQuery。比如 `jQuery('div')`
+          2. jQuery 变量规定新的名称：`$.noConflict()`
+          3. `var xx = jQuery.noConflict();`
+
    - 优化
 
      - 如何使用jQuery绑定
@@ -489,7 +708,89 @@
 
      - `return false;`
 
-11. 扩展：
+11.  jQuery 插件
+
+    1. jQuery 功能比较有限，想要更复杂的特效效果，可以借助于 jQuery 插件完成。 这些插件也是依赖于jQuery来完成的，所以必须要先引入
+
+    2. jQuery文件，因此也称为 jQuery 插件。
+
+    3. jQuery 插件常用的网站：
+
+       1. jQuery 插件库  http://www.jq22.com/     
+
+       2. jQuery 之家   http://www.htmleaf.com/ 
+
+          jQuery 插件使用步骤：
+
+       3. 引入相关文件。（jQuery 文件 和 插件文件）    
+
+       4. 复制相关html、css、js (调用插件)。
+
+    4. **图片懒加载插件**
+
+       图片的懒加载就是：当页面滑动到有图片的位置，图片才进行加载，用以提升页面打开的速度及用户体验。
+
+       **代码演示：**
+
+       懒加载只需引入html 和 js操作 即可，此插件不涉及css。
+
+       1. 引入js
+
+          ```js
+          <script src="js/EasyLazyload.min.js"></script>
+          <script>
+             	lazyLoadInit({
+             		showTime: 1100,
+             		onLoadBackEnd: function(i, e) {
+               		console.log("onLoadBackEnd:" + i);
+             		},
+             		onLoadBackStart: function(i, e) {
+               		console.log("onLoadBackStart:" + i);
+             		}
+           	});
+          </script>
+          ```
+
+       2. 引入 HTML
+
+          ```js
+          <img data-lazy-src="upload/floor-1-3.png" alt="">
+          ```
+
+    5. **全屏滚动插件**
+
+       全屏滚动插件比较大，所以，一般大型插件都会有帮助文档，或者网站。全屏滚动插件介绍比较详细的网站为：
+
+       http://www.dowebok.com/demo/2014/77/
+
+       全屏滚动因为有多重形式，所以不一样的风格html和css也不一样，但是 js 变化不大。所以下面只演示js的引入，html和css引入根据自己实际
+
+       项目需要使用哪种风格引入对应的HTML和CSS。
+
+       ```js
+       <script src="js/jquery.min.js"></script>
+       <script src="js/fullpage.min.js"></script>
+       <script>
+         	$(function() {
+         		$('#dowebok').fullpage({
+           		sectionsColor: ['pink', '#4BBFC3', '#7BAABE', '#f90'],
+           		navigation: true
+         		});
+       	});
+       </script>
+       ```
+
+       注意：实际开发，一般复制文件，然后在文件中进行修改和添加功能。
+
+    6. **bootstrap组件**
+
+       ​	Bootstrap是 Twitter 公司设计的基于HTML、CSS、JavaScript开发的简洁、直观、强悍的前端开发框架，他依靠jQuery实现，且支持响应式布局，使得 Web 开发更加方便快捷。
+
+       ​	**凡是在软件开发中用到了软件的复用，被复用的部分都可以称为组件，凡是在应用程序中已经预留接口的组件就是插件**。Bootstrap组件使
+
+       用非常方便:  1.引入bootstrap相关css和js        2.去官网复制html
+
+12. 扩展：
 
     - $.login
     - from表单验证
@@ -504,7 +805,7 @@
       - html自定义标签属性
       - 增加验证规则 + 错误提示
 
-12. Ajax：即`Asynchronous Javascript And XML`（异步 JavaScript 和 XML），是指一种创建交互式、快速动态网页应用的网页开发技术，无需重新加载整个网页的情况下，能够更新部分网页的技术。（偷偷发送请求）
+13. Ajax：即`Asynchronous Javascript And XML`（异步 JavaScript 和 XML），是指一种创建交互式、快速动态网页应用的网页开发技术，无需重新加载整个网页的情况下，能够更新部分网页的技术。（偷偷发送请求）
 
 #### 六、操作元素
 
@@ -616,21 +917,23 @@
       1. **所有子节点**
 
          1. `parentNode.childNodes` （标准）
+
          2. `parentNode.childNodes` 返回包含指定节点的子节点集合，该集合为即时更新集合
+
          3. 注意：返回值里面包含了所有的子节点，其中包括元素节点、文本节点等等
-         4. 如果想要获取里面的元素节点，则需要专门的处理，所以**一般情况下并不使用 childNodes **
+
+         4. 如果想要获取里面的元素节点，则需要专门的处理，所以**一般情况下并不使用 childNodes**
+
          5. 下面是利用 childNodes 获取元素节点办法
 
-         ```js
-         var ul = document.querySelector('ul');
-         for (var i = 0; i < ul.childNodes.length; i++){
-             if (ul.childNodes[i].nodeType == 1){
-                 console.log(ul.childNodes[i]);
-             }
-         }
-         ```
-
-         
+            ```js
+            var ul = document.querySelector('ul');
+            for (var i = 0; i < ul.childNodes.length; i++){
+                if (ul.childNodes[i].nodeType == 1){
+                    console.log(ul.childNodes[i]);
+                }
+            }
+            ```
 
       2. **子元素节点**
 
@@ -818,7 +1121,7 @@
 1. **创建**
 
    1. `documet.write()`
-   2. ``element.innerHTML`
+   2. `element.innerHTML`
    3. `document.createElement()`
 
 2. **增加**
