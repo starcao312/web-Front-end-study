@@ -293,7 +293,7 @@
         - data('name')
         - data('name', 'value')
         - 注意：同时，还可以读取 HTML5 自定义属性  data-index ，得到的是数字型。
-      
+   
    3. 文本操作
 
       - `$('#i1').html()`		// 获取html内容
@@ -790,7 +790,46 @@
 
        用非常方便:  1.引入bootstrap相关css和js        2.去官网复制html
 
-12. 扩展：
+12. 项目：toDoList
+
+    1. 项目注意点：
+       1. 刷新页面不会丢失数据，因此需要用到本地存储 localStorage
+       2. 核心思路： 不管按下回车，还是点击复选框，都是把本地存储的数据加载到页面中，这样保证刷新关闭页面不会丢失数据
+       3. 存储的数据格式：var todolist =  [{ title : ‘xxx’, done: false}]
+       4. 注意点1： 本地存储 localStorage 里面只能存储字符串格式 ，因此需要把对象转换为字符串 JSON.stringify(data)。
+       5. 注意点2： 获取本地存储数据，需要把里面的字符串转换为对象格式JSON.parse() 我们才能使用里面的数据。
+
+13. jQuery 尺寸、位置操作
+
+    jQuery中分别为我们提供了两套快速获取和设置元素尺寸和位置的API，方便易用，内容如下
+
+    1. jQuery 尺寸操作
+
+       jQuery 尺寸操作包括元素宽高的获取和设置，且不一样的API对应不一样的盒子模型。
+
+       | 语法                                   | 用法                                                   |
+       | -------------------------------------- | ------------------------------------------------------ |
+       | `width() / height()`                   | 取得匹配元素宽度和高度值，只算 width / height          |
+       | `innerWidth() / innerHeight()`         | 取得匹配元素宽度和高度值，包含 padding                 |
+       | `outerWidth() / outerHeight()`         | 取得匹配元素宽度和高度值，包含 padding、border         |
+       | `outerWidth(true) / outerHeight(true)` | 取得匹配元素宽度和高度值，包含 padding、border、margin |
+
+       - 如果以上参数为空，则获取参数值，返回的是数值类型
+       - 如果参数是数字，则修改相应值
+       - 参数可以不必写单位
+       - 注意：有了这套 API 我们将可以快速获取和子的宽高，至于其他属性想要获取和设置，还要使用 css() 等方法配合。
+
+    2. jQuery 位置操作
+
+       jQuery的位置操作主要有三个： offset()、position()、scrollTop()/scrollLeft() , 具体介绍如下: 
+
+       ![offset](笔记图片/offset.png)
+
+       ![position](笔记图片/position.png)
+
+       ![scroll](笔记图片/scroll.png)
+
+14. 扩展：
 
     - $.login
     - from表单验证
@@ -805,7 +844,7 @@
       - html自定义标签属性
       - 增加验证规则 + 错误提示
 
-13. Ajax：即`Asynchronous Javascript And XML`（异步 JavaScript 和 XML），是指一种创建交互式、快速动态网页应用的网页开发技术，无需重新加载整个网页的情况下，能够更新部分网页的技术。（偷偷发送请求）
+15. Ajax：即`Asynchronous Javascript And XML`（异步 JavaScript 和 XML），是指一种创建交互式、快速动态网页应用的网页开发技术，无需重新加载整个网页的情况下，能够更新部分网页的技术。（偷偷发送请求）
 
 #### 六、操作元素
 
@@ -2064,21 +2103,14 @@
 2. window.sessionStorage
 
    1. 生命周期为关闭浏览器窗口
-
    2. 在同一个窗口(页面)下数据可以共享
-
    3. 以键值对的形式存储使用
-
    4. 存储数据：
       `sessionStorage.setItem(key, value);`
-
    5. 获取数据：
-
       `sessionStorage.getItem(key);`
-
    6. 删除数据：
       `sessionStorage.removeItem(key);`
-
    7. 清空数据：
       `sessionStorage.clear();`
 
@@ -2099,22 +2131,357 @@
 4. 记住用户名
 
    1. 把数据存起来，用到本地存储
-
    2. 关闭页面，也可以显示用户名，所以用到localStorage
-
    3. 打开页面，先判断是否有这个用户名，如果有，就在表单里面显示用户名，并且勾选复选框
-
    4. 当复选框发生改变的时候change事件
-
    5. 如果勾选，就存储，否则就移除
 
-   6. 源码：
+#### 二十、面向对象编程
+
+1. 面向对象和面向过程
+
+   |      | 面向过程                                                     | 面向对象                                                     |
+   | ---- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+   | 优点 | 性能比面向对象高，适合跟硬件联系很紧密的东西，例如单片机就采用的面向过程编程。 | 易维护、易复用、易扩展，由于面向对象有封装、继承、多态性的特性，可以设计出低耦合的系统，使系统 更加灵活、更加易于维护 |
+   | 缺点 | 不易维护、不易复用、不易扩展                                 | 性能比面向过程低                                             |
+
+2. 对象和类
+
+   1. 对象是由 **属性** 和 **方法** 组成的：是一个无序键值对的集合,指的是一个具体的事物
+
+      - 属性：事物的特征，在对象中用属性来表示（常用名词）
+      - 方法：事物的行为，在对象中用方法来表示（常用动词）
+
+   2. 类
+
+      在 ES6 中新增加了类的概念，可以使用 class 关键字声明一个类，之后以这个类来实例化对象。类抽象了对象的公共部分，它泛指某一大类（class）对象特指某一个，通过类实例化一个具体的对象
+
+   3. 创建类
 
       ```js
+      class Star {
+          // 类的共有属性放到 constructor 里面 constructor是 构造器或者构造函数
+          constructor(name, age) {
+              this.name = name;
+              this.age = age;
+          }
+          // 注意,方法与方法之间不需要添加逗号
+          sing(song) {
+              console.log(this.name + '唱' + song);
+          }
+      }
+      var ldh = new Star('刘德华', 18);
+      console.log(ldh);
+      ldh.sing('冰雨');
+      ```
+
+   4. 注意点
+
+      1. 通过class 关键字创建类，类名我们还是习惯性定义首字母大写
+      2. 类里面有个constructor 函数，可以接受传递过来的参数，同时返回实例对象
+      3. constructor 函数 只要 new 生成实例时，就会自动调用这个函数，如果我们不写这个函数,类也会自动生成这个函数
+      4. 多个函数方法之间不需要添加逗号分隔
+      5. 生成实例 new 不能省略
+      6. 语法规范，创建类，类名后面不要加小括号，生成实例 类名后面加小括号，构造函数不需要加function
+      7. 类里面的所有的函数不需要写 function
+      8. 多个函数方法之间不需要添加逗号分隔
+
+   5. 类的继承
+
+      1. 语法
+
+         ```js
+         // 父类
+         class Father{   
+         }
+         // 子类继承父类
+         class Son extends Father {  
+         }
+         ```
+
+      2. super 关键字
+
+         1. 子类使用super关键字访问父类的方法
+         2. 继承中，如果实例化子类输出一个方法，先看子类有没有这个方法，如果有就先执行子类的
+         3. 继承中，如果子类里面没有，就去查找父类有没有这个方法，如果有，就执行父类的这个方法(就近原则)
+         4. 如果子类想要继承父类的方法，同时在自己内部扩展自己的方法，利用super 调用父类的构造函数，**super 必须在子类this之前调用**
+
+      3. **时刻注意this的指向问题，类里面的共有的属性和方法一定要加this使用**
+
+         1. constructor中的this指向的是new出来的实例对象 
+         2. 自定义的方法，一般也指向的new出来的实例对象
+         3. 绑定事件之后this指向的就是触发事件的事件源
+
+      4. **在 ES6 中类没有变量提升，所以必须先定义类，才能通过类实例化对象**
+
+      5. **类里面的共有属性和方法一定要加 this 使用**
+
+      6. `constructor` 里面的 this 指向实例对象，方法里面的 this 指向这个方法的调用者。
+
+3. 构造函数和原型
+
+   1. 构造函数
+
+      构造函数是一种特殊的函数，主要用来初始化对象，即为对象成员变量赋初始值，它总与 new 一起使用。我们可以把对象中一些公共的属性和方法抽取出来，然后封装在这个函数里面
+
+      **new 在执行时会做四件事情**
+
+      1. 在内存中创建一个新的空对象
+      2. 让 this 指向这个新的对象
+      3. 执行构造函数里的代码，给这个新对象添加属性和方法
+      4. 返回这个新对象（所以构造函数里不需要 return）
+
+   2. 实例成员
+
+      实例成员就是构造函数内部通过this添加的成员，如下列代码中uname age sing 就是实例成员，实例成员只能通过实例化的对象来访问
+
+   3. 静态成员
+
+      静态成员是在构造函数本身上添加的成员，如下列代码中 sex 就是静态成员，静态成员只能通过构造函数来访问
+
+      ```js
+      function Star(name, age) {
+          this.name = name;
+          this.age = age;
+          this.sing = function () {
+              console.log('哈哈哈');
+          }
+      }
+      Star.sex = '男';
+      let zs = new Star('张三', 20);
+      console.log(zs.name); //实例成员只能通过实例化的对象来访问
+      console.log(Star.sex); //静态成员只能通过构造函数来访问
+      ```
+
+   4. 构造函数的问题
+
+      构造函数方法很好用，但是**存在浪费内存的问题**。
+
+      ![构造函数的问题](笔记图片/构造函数的问题.png)
+
+   5. 构造函数原型对象 prototype
+
+      1. 构造函数通过原型分配的函数是所有对象所共享的。
+      2. JavaScript 规定，每一个构造函数都有一个 `prototype`属性，指向另一个对象。注意这个 `prototype` 就是一个对象，这个对象的所有属性和方法，都会被构造函数所拥有。
+      3. 我们可以把那些不变的方法，直接定义在 `prototype` 对象上，这样所有对象的实例就可以共享这些方法。
+      4. 一般情况下，把公共属性定义到构造函数里面，公共的方法放到原型对象上
+
+   6. 对象原型
+
+      1. 对象都会有一个属性 `__proto__` 指向构造函数的 `prototype` 原型对象，之所以我们对象可以使用构造函数 `prototype` 原型对象的属性和方法，就是因为对象有 `__proto__` 原型的存在。
+      2. `__proto__` 对象原型和原型对象 `prototype` 是等价的
+      3. `__proto__` 对象原型的意义就在于为对象的查找机制提供一个方向，或者说一条路线，但是它是一个非标准属性，因此实际开发中，不可以使用这个属性，它只是内部指向原型对象 `prototype` 
+
+      ![对象原型](笔记图片/对象原型.png)
+
+      ```js
+      console.log(Star.prototype === zs.__proto__); // 打印 true
+      ```
+
+   7. constructor构造函数
+
+      1. 对象原型（ `__proto__` ）和构造函数（ `prototype` ）原型对象里面都有一个属性 `constructor` 属性 ，`constructor`我们称为构造函数，因为它**指回构造函数本身**。
       
+      2. `constructor` 主要用于记录该对象引用于哪个构造函数，它可以让原型对象重新指向原来的构造函数。
+      
+      3. 一般情况下，对象的方法都在构造函数的原型对象中设置。如果有多个对象的方法，我们可以给原型对象采取对象形式赋值，但是这样就会覆盖构造函数原型对象原来的内容，这样修改后的原型对象 `constructor`  就不再指向当前构造函数了。此时，我们可以在修改后的原型对象中，添加一个 `constructor` 指向原来的构造函数。
+      
+      4. 如果我们修改了原来的原型对象,给原型对象赋值的是一个对象,则必须手动的利用 `constructor` 指回原来的构造函数
+      
+      ```js
+      Star.prototype = {
+      	constructor: Star, // 手动设置指回原来的构造函数
+      }
+      ```
+
+   8. 构造函数实例和原型对象三角关系
+
+      1. 构造函数的 `prototype` 属性指向了构造函数原型对象
+      2. 实例对象是由构造函数创建的,实例对象的 `__proto__` 属性指向了构造函数的原型对象
+      3. 构造函数的原型对象的 `constructor` 属性指向了构造函数,实例对象的原型的 `constructor` 属性也指向了构造函数
+
+      ![构造函数实例和原型对象三角关系](笔记图片/构造函数实例和原型对象三角关系.png)
+      
+   9. 原型链
+
+      每一个实例对象又有一个 `__proto__` 属性，指向的构造函数的原型对象，构造函数的原型对象也是一个对象，也有 `__proto__` 属性，这样一层一层往上找就形成了原型链。
+
+      ![原型链](笔记图片/原型链.png)
+      
+   10. 原型链和成员的查找机制
+
+       任何对象都有原型对象，也就是 `prototype` 属性，任何原型对象也是一个对象，该对象就有 `__proto__` 属性，这样一层一层往上找，就形成了一条链，我们称此为原型链。
+
+       1. 当访问一个对象的属性（包括方法）时，首先查找这个对象自身有没有该属性。
+       2. 如果没有就查找它的原型（也就是 `__proto__` 指向的 `rototype` 原型对象）。
+       3. 如果还没有就查找原型对象的原型（Object的原型对象）。
+       4. 依此类推一直找到 Object 为止（null）。
+       5. `__proto__` 对象原型的意义就在于为对象成员查找机制提供一个方向，或者说一条路线。
+       
+   11. 原型对象中this指向
+   
+       构造函数中的this和原型对象的this，都指向我们new出来的实例对象
+       
+   12. 通过原型为数组扩展内置方法
+   
+       可以通过原型对象，对原来的内置对象进行扩展自定义的方法，比如给数组增加自定义求偶数和的功能
+   
+       ```js
+       console.log(Array.prototype);
+       Array.prototype.sum = function () {
+           let sum = 0;
+           for (let i = 0; i < this.length; i++) {
+               sum += this[i];
+           }
+           return sum;
+       }
+       //此时数组对象中已经存在sum()方法了 可以使用数组.sum()进行数据的求
+       let a = [1, 2, 3, 4];
+       console.log(a.sum()); // 10
+       ```
+   
+       **注意：** 数组和字符串内置对象不能给原型对象覆盖操作 `Array.prpotype = {}` ，只能是 `Array.prototype.xxx = function(){}` 的方式。
+   
+4. 继承
+
+   ES6 之前没有提供 extends 继承，我们可以通过 **构造函数 + 原型对象** 模拟实现继承，被称为组合继承
+
+   1. `call()`
+      
+      1. call()可以调用函数
+      2. call()可以修改this的指向，使用call()的时候，参数一是修改后的this指向,参数2,参数3..使用逗号隔开连接
+      
+   2. 子构造函数继承父构造函数中的属性
+   
+      1. 先定义一个父构造函数
+      2. 再定义一个子构造函数
+      3. 子构造函数继承父构造函数的属性(使用call方法)
+   
+      ```js
+      // 借用父构造函数继承属性
+      // 父构造函数
+      function Father(uNama, age) {
+          // this 指向父构造函数的对象实例
+          this.uNama = uNama;
+          this.age = age;
+      }
+      // 子构造函数
+      function Son(uName, age, score) {
+          // this 指向子构造函数的对象实例
+          // 使用 call() 方式实现子继承父的属性
+          Father.call(this, uName, age);
+          this.score = score;
+      }
+      let son = new Son('张三', 20, 99);
+      console.log(son);
+      ```
+   
+   3. 借用原型对象继承方法
+   
+      1. 先定义一个父构造函数
+      2. 再定义一个子构造函数
+      3. 子构造函数继承父构造函数的属性(使用call方法)
+   
+      ```js
+      function Father(uname, age) {
+          // this 指向父构造函数的对象实例
+          this.uname = uname;
+          this.age = age;
+      }
+      Father.prototype.money = function () {
+          console.log(100000);
+      };
+      // 2 .子构造函数
+      function Son(uname, age, score) {
+          // this 指向子构造函数的对象实例
+          Father.call(this, uname, age);
+          this.score = score;
+      }
+      // Son.prototype = Father.prototype; 这样直接赋值会有问题,如果修改了子原型对象,父原型对象也会跟着一起变化
+      Son.prototype = new Father();
+      // 如果利用对象的形式修改了原型对象,别忘了利用constructor 指回原来的构造函数
+      Son.prototype.constructor = Son;
+      // 这个是子构造函数专门的方法
+      Son.prototype.exam = function () {
+          console.log('孩子要考试');
+      }
+      var son = new Son('刘德华', 18, 100);
+      console.log(son);
+      ```
+   
+5. ES5新增方法
+
+   1. 数组方法 `forEach` 遍历数组
+
+      ```js
+      arr.forEach(function (value, index, array) {
+          // 参数一是:数组元素
+          // 参数二是:数组元素的索引
+          // 参数三是:当前的数组
+      })
+      // 相当于数组遍历的 for循环 没有返回值
+      ```
+
+   2. 数组方法 `filter` 过滤数组
+
+      ```js
+      // 主要用于筛选数组
+      var arr = [12, 66, 4, 88, 3, 7];
+      var newArr = arr.filter(function (value, index, array) {
+          // 参数一是:数组元素
+          // 参数二是:数组元素的索引
+          // 参数三是:当前的数组
+          return value >= 20;
+      });
+      console.log(newArr); // [66,88] // 返回值是一个新数组
+      ```
+
+   3. 数组方法 `some`
+
+      ```js
+      // some 查找数组中是否有满足条件的元素
+      var arr = [10, 30, 4];
+      var flag = arr.some(function (value, index, array) {
+          // 参数一是:数组元素
+          // 参数二是:数组元素的索引
+          // 参数三是:当前的数组
+          return value < 3;
+      });
+      console.log(flag); // false返回值是布尔值,只要查找到满足条件的一个元素就立马终止循环
+      ```
+
+   4. `some` 和 `forEach` 区别
+
+      1. 如果查询数组中唯一的元素，用some方法更合适，在some 里面 遇到 return true 就是终止遍历 迭代效率更高
+      2. 在forEach 里面 return 不会终止迭代
+
+   5. `trim` 方法去除字符串两端的空格
+
+      ```js
+      var str = '   hello   '
+      console.log(str.trim()）  // hello 去除两端空格
+      ```
+
+   6. 获取对象的属性名
+
+      `Object.keys(对象)` 获取到当前对象中的属性名 ，返回值是一个数组，类似于 `for x in xx`
+
+   7. **Object.defineProperty**
+
+      `Object.defineProperty` 设置或修改对象中的属性
+
+      ```js
+      Object.defineProperty(对象， 修改或新增的属性名， {
+          value: 修改或新增的属性的值,
+          writable: true / false, //如果值为false 不允许修改这个属性值
+          enumerable: false, //enumerable 如果值为false 则不允许遍历
+          configurable: false //configurable 如果为false 则不允许删除这个属性 属性是否可以被删除或是否可以再次修改特性
+      })
       ```
 
       
+
+
 
 
 
