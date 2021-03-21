@@ -3134,19 +3134,19 @@ fn2();
 
 #### 1. ES6 相关概念
 
-1. 什么是 ES6
+##### 1.1 什么是 ES6
 
-   ES 的全称是 ECMAScript , 它是由 ECMA 国际标准化组织,制定的一项脚本语言的标准化规范。
+ES 的全称是 ECMAScript , 它是由 ECMA 国际标准化组织,制定的一项脚本语言的标准化规范。
 
-   ![](笔记图片/es-version.png)
+![](笔记图片/es-version.png)
 
-   ES6 实际上是一个泛指，泛指 ES2015 及后续的版本。
+ES6 实际上是一个泛指，泛指 ES2015 及后续的版本。
 
-2. 为什么使用 ES6
+##### 1.2 为什么使用 ES6
 
-   1. 每一次标准的诞生都意味着语言的完善，功能的加强。JavaScript语言本身也有一些令人不满意的地方。
-   2. 变量提升特性增加了程序运行时的不可预测性
-   3. 语法过于松散，实现相同的功能，不同的人可能会写出不同的代码
+1. 每一次标准的诞生都意味着语言的完善，功能的加强。JavaScript语言本身也有一些令人不满意的地方。
+2. 变量提升特性增加了程序运行时的不可预测性
+3. 语法过于松散，实现相同的功能，不同的人可能会写出不同的代码
 
 #### 2. ES6 新增语法
 
@@ -3229,6 +3229,8 @@ ES6中新增了用于声明变量的关键字
 
 声明常量，常量就是值（内存地址）不能变化的量
 
+**注意：在 `ES6` 开发中，优先使用 `const`，只有需要改变某一个标识符的时候才使用 `let` **
+
 1. **具有块级作用域**
 
    ```js
@@ -3263,6 +3265,9 @@ ES6中新增了用于声明变量的关键字
    2. 既然是常量不能重新进行赋值，如果是基本数据类型，不能更改值，如果是复杂数据类型，不能更改地址值
    3. 声明 const时候必须要给定值
    
+5. **注意**
+
+   在 **ES6** 开发过程中，优先使用 **const** ，只有需要改变某一标识符的时候才使用 **let**
 ##### 3. **let、const、var 的区别**
 
    1. 使用 var 声明的变量，其作用域为该语句所在的函数内，且存在变量提升现象
@@ -3593,7 +3598,258 @@ console.log(s2);  // ['zhangsan', 'lisi']
    ```
    
 
-### 二十、补充
+### 二十、导入导出
+
+---
+
+#### 1、ES6 导入
+
+##### 1、首先需要在 `script` 标签上写上 `type='module'`
+
+```html
+<script src="./aaa.js" type="module"></script>
+```
+
+##### 2、导入方法
+
+1. 导入的 `{}` 中定义的变量
+
+   ```js
+   import { flag } from './aaa.js'
+   ```
+
+2. 直接导入 `export` 定义的变量
+
+   ```js
+   import { flag } from './aaa.js'
+   ```
+
+3. 导入 `export` 的 `function/class`
+
+   ```js
+   import { flag } from './aaa.js'
+   ```
+
+4. 导入 `export default` 中的变量
+
+   ```js
+   import XXX from './aaa.js' // 自命名
+   ```
+
+5. 统一导入
+
+   ```js
+   import { a, b, c, d } from './aaa.js'
+   ```
+
+#### 2. ES6 导出
+
+### 二十一、webpack
+
+---
+
+#### 一、概述
+
+##### 1、概念
+
+- `webpack` 是一个现代化的 `JavaScript` 应用的静态**模块打包**工具。
+
+##### 2、模块
+
+- 前端模块化方案有：AMD、CMD、CommonJS、ES6
+- 在ES6之前，我们想要进行模块化开发，就必须借助其他的工具，让我们进行模块化开发
+- 并且在通过模块化开发完成项目之后，还需要处理模块间的各种依赖，并且将其进行整合打包。
+- 而且不仅仅是 JavaScript 文件，我们的 CSS、图片、json文件等等在webpack中都可以被当作模块来使用
+
+##### 3、打包
+
+- 就是将webpack中的各种资源 模块进行打包合并成一个或多个包（bundle）
+- 并且在打包的过程中，还可以对资源进行处理，比如压缩图片，将 sass 转成 css，将 ES6 语法转成 ES5 语法，将 typescript 转成 JavaScript 等等操作。
+
+#### 二、基本使用
+
+##### 1、无配置文件打包
+
+##### 2、一些错误情况
+
+1. `webpack` : 无法加载文件 `D:\Program Files\nodejs\webpack.ps1`，因为在此系统上禁止运行脚本。
+
+   - 解决办法
+   - 使用管理员打开使用的工具（idea,vs code,HbuilderX）。
+   - 命令行执行：get-ExecutionPolicy，显示Restricted，表示状态是禁止的。
+   - 执行：set-ExecutionPolicy RemoteSigned
+   - 再执行get-ExecutionPolicy，就显示RemoteSigned，就可以使用webpack打包了。
+
+2. `Module not found: Error: Can't resolve './dist/bundle.js' in 'G:\xxx'`
+
+   - webpack 在 4.x 之后的版本中修改了打包命令，解决办法如下：
+
+     `webpack <entry> [<entry>] -o <output>`
+
+   - 也可以直接输入 `webpack` 命令进行打包，默认的输入文件为：`./src/index.main`，默认输出文件为：`./dist/main.js`
+
+##### 3、有配置文件打包
+
+配置文件为 `webpack.config.js`
+
+```js
+const path = require('path')
+
+module.exports = {
+  // 打包入口
+  entry: './src/index.js',
+  // 打包出口
+  output: {
+    // 此路径为绝对路径
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'bundle.js'
+  }
+}
+```
+
+##### 4、初始化项目
+
+- 命令：`npm init`
+
+- 效果：会生成一个 `package.json` 文件
+
+- 作用：它是 `NodeJS` 约定的用来存放项目的信息和配置等信息的文件。
+
+- `package.json` 中各字段的说明
+
+  > name：包名
+  >
+  > deecription：应用项目描述
+  >
+  > version：版本号
+  >
+  > config：应用的配置项
+  >
+  > author：作者
+  >
+  > respository：资源仓库地址
+  >
+  > licenses：授权方式
+  >
+  > directories：目录
+  >
+  > main：应用入口文件
+  >
+  > bin：命令行文件
+  >
+  > dependencries：项目应用运行依赖模块
+  >
+  > devDependencies：项目应用开发环境依赖
+  >
+  > engines：运行引擎，指明node.js运行所需要的版本
+  >
+  > script：脚本
+  
+- 1
+
+##### 5、运行依赖和开发依赖
+
+- 运行依赖（发布）
+
+  - `npm install XXX --save`
+  - `dependencies` 键下，发布后还需要依赖的模块，譬如像 `jQuery` 库或者 `Angular` 框架类似的，我们在开发完后后肯定还要依赖它们，否则就运行不了。
+
+  ```js
+  "dependencies": {
+    "path": "^0.12.7"
+  },
+  ```
+
+- 开发依赖（辅助）
+
+  - `npm install XXX --save-dev`
+  - `devDependencies` 键下，开发时的依赖比如安装 `js` 的压缩包 `gulp-uglify` 因为我们在发布后用不到它，而只是在我们开发才用到它。
+
+  ```js
+  "devDependencies": {
+    "webpack": "^5.27.0"
+  }
+  ```
+
+##### 6、loader
+
+- 通过 `loader` 打包 `非js模块`：默认情况下，`webpack` 只能打包 `js文件` ，如果想要打包 `非js文件`，需要调用 `loader` 加载器才能打包
+
+- `loader` 加载器包含：
+
+  - `less-loader`
+  - `sass-loader`
+  - `url-loader`：打包处理 `css` 中与 `url` 路径有关的文件
+  - `file-loader`：处理大文件（无需在配置文件中配置）
+  - `babel-loader`：处理高级 `js` 语法的加载器
+  - `postcss-loader`
+  - `css-loader, style-loader`
+
+- **注意：**指定多个 `loader` 时的顺序是固定的，而调用 `loader` 的顺序是从后向前进行调用
+
+- `loader` 使用过程
+
+  - 通过 `npm` 来安装需要使用的 `loader`
+    - `npm install style-loader css-loader --save-dev`
+  - 在 `webpack.config.js` 中的 `module` 关键字下配置
+
+- 配置示例
+
+  ```js
+  module: {
+    rules: [
+      {
+        // test 设置需要匹配的文件类型，支持正则
+        test: /\.css$/,
+        // use 表示该文件类型需要调用的 loader
+        // css-loader 只负责将 css 文件进行加载，需要配合 style-loader 进行使用
+        use: ['style-loader', 'css-loader']
+      }
+    ]
+  }
+  ```
+
+- 图片处理（`url-loader` 和 `file-loader`）
+
+  - 图片未显示：
+
+    - 我们需要在路径下添加一个 `dist/`
+
+    ```js
+    output: {
+        // 此路径为绝对路径
+        path: path.resolve(__dirname, 'dist'),
+        filename: 'bundle.js',
+        publicPath: 'dist/'
+    },
+    ```
+
+  - `url-loader` 的 `option` 下可添加的选项
+
+    - `limit`：`limit` 用来设置字节数，只有小于 `limit` 值的图片，才会转换为`base64` 图片
+    - `img`：文件要打包到的文件夹
+    - `name`：获取图片原来的名字，放在该位置
+    - `hash: 8`：为了防止图片名称冲突，依然使用 `hash`，但是只保留 8 位
+    - `ext`：使用图片原来的拓展名
+
+    ```js
+    options: {
+      limit: 13000,
+      name: 'img/[name].[hash:8].[ext]'
+    }
+    ```
+
+- 打包 js 文件中的高级语法（`babel-loader`）
+
+  - 
+
+
+
+ 
+
+
+
+### 附录一、补充
 
 ------
 
@@ -3619,7 +3875,7 @@ if (Infinity)
 if (-Infinity)
 ```
 
-### 二十一、一些博客
+### 附录二、一些博客
 
 1. **GET和POST两种基本请求方法的区别：**https://www.cnblogs.com/logsharing/p/8448446.html
 

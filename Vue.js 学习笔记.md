@@ -1,8 +1,8 @@
-# Vue.js 学习笔记
+## Vue.js 学习笔记
 
 ### 一、Vue实例
 
-#### 一、创建一个实例
+#### 1. 创建一个实例
 
 ```js
 var vm = new Vue({
@@ -10,7 +10,7 @@ var vm = new Vue({
 })
 ```
 
-#### 二、数据与方法
+#### 2. 数据与方法
 
 当一个 Vue 实例被创建时，它将 `data` 对象中的所有的 property 加入到 Vue 的**响应式系统**中。当这些 property 的值发生改变时，视图将会产生“响应”，即匹配更新为新的值。
 
@@ -74,7 +74,7 @@ vm.$watch('a', function (newValue, oldValue) {
 
 以后你可以在 [API 参考](https://cn.vuejs.org/v2/api/#实例-property)中查阅到完整的实例 property 和方法的列表。
 
-#### 三、实例生命周期钩子
+#### 3. 实例生命周期钩子
 
 每个 Vue 实例在被创建时都要经过一系列的初始化过程——例如，需要设置数据监听、编译模板、将实例挂载到 DOM 并在数据变化时更新 DOM 等。同时在这个过程中也会运行一些叫做**生命周期钩子**的函数，这给了用户在不同阶段添加自己的代码的机会。
 
@@ -95,9 +95,23 @@ new Vue({
 
 也有一些其它的钩子，在实例生命周期的不同阶段被调用，如 [`mounted`](https://cn.vuejs.org/v2/api/#mounted)、[`updated`](https://cn.vuejs.org/v2/api/#updated) 和 [`destroyed`](https://cn.vuejs.org/v2/api/#destroyed)。生命周期钩子的 `this` 上下文指向调用它的 Vue 实例。
 
-##### 注意点：
+**注意点：**
 
 不要在选项 property 或回调上使用**[箭头函数](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/Arrow_functions)**，比如 `created: () => console.log(this.a)` 或 `vm.$watch('a', newValue => this.myMethod())`。因为箭头函数并没有 `this`，`this` 会作为变量一直向上级词法作用域查找，直至找到为止，经常导致 `Uncaught TypeError: Cannot read property of undefined` 或 `Uncaught TypeError: this.myMethod is not a function` 之类的错误。
+
+#### 4. 渐进式框架
+
+- 渐进式意味着可以将 `Vue` 作为你应用的一部分嵌入其中，带来更加丰富的交互体验
+- 或者如果你希望将更多的业务逻辑使用 `Vue` 实现，那么 `Vue` 的核心库以及其生态系统
+- 比如 `Core +  Vue-router + Vuex`，也可以满足你各种各样的需求。
+
+#### 5. 高级功能
+
+- 解耦视图和数据
+- 可复用组件
+- 前端路由技术
+- 状态管理
+- 虚拟 DOM
 
 ### 二、模板语法
 
@@ -105,7 +119,7 @@ new Vue({
 
 Vue提供了一些修饰符，这些修饰符在使用起来非常方便，比如阻止默认事件、冒泡等。
 
-.lazy：
+###### .lazy：
 
 v-modeil不用多说，输入框改变，这个数据就会改变，lazy这个修饰符会在光标离开input框才会更新数据：
 
@@ -113,7 +127,7 @@ v-modeil不用多说，输入框改变，这个数据就会改变，lazy这个�
 <input type="text" v-model.lazy="value">
 ```
 
-.trim：
+###### .trim：
 
 输入框过滤首尾的空格：
 
@@ -121,7 +135,7 @@ v-modeil不用多说，输入框改变，这个数据就会改变，lazy这个�
 <input type="text" v-model.trim="value">
 ```
 
-.number：
+###### .number：
 
 先输入数字就会限制输入只能是数字，先字符串就相当于没有加number，注意，不是输入框不能输入字符串，是这个数据是数字：
 
@@ -129,7 +143,7 @@ v-modeil不用多说，输入框改变，这个数据就会改变，lazy这个�
 <input type="text" v-model.number="value">
 ```
 
-.stop：
+###### .stop：
 
 阻止事件冒泡，相当于调用了event.stopPropagation()方法。这个应该不需要解释：
 
@@ -137,7 +151,7 @@ v-modeil不用多说，输入框改变，这个数据就会改变，lazy这个�
 <button @click.stop="test">test</button>
 ```
 
-.prevent：
+###### .prevent：
 
 阻止默认行为，相当于调用了event.preventDefault()方法，比如表单的提交、a标签的跳转就是默认事件：
 
@@ -145,7 +159,7 @@ v-modeil不用多说，输入框改变，这个数据就会改变，lazy这个�
 <a @click.prevent="test">test</a>
 ```
 
-.self：
+###### .self：
 
 只有元素本身触发时才触发方法，就是只有点击元素本身才会触发。比如一个div里面有个按钮，div和按钮都有事件，我们点击按钮，div绑定的方法也会触发，如果div的click加上self，只有点击到div的时候才会触发，变相的算是阻止冒泡：
 
@@ -153,7 +167,7 @@ v-modeil不用多说，输入框改变，这个数据就会改变，lazy这个�
 <div @click.self="test"></div>
 ```
 
-.once：
+###### .once：
 
 只能用一次，无论点击几次，执行一次之后都不会再执行：
 
@@ -161,7 +175,7 @@ v-modeil不用多说，输入框改变，这个数据就会改变，lazy这个�
 <div @click.once="test"></div>
 ```
 
-.capture：
+###### .capture：
 
 事件的完整机制是捕获-目标-冒泡，事件触发是目标往外冒泡，比如：
 
@@ -175,7 +189,7 @@ v-modeil不用多说，输入框改变，这个数据就会改变，lazy这个�
 
 先1 后2。
 
-.passive：
+###### .passive：
 
 其实我不怎么理解，官网解释说可以提升移动端的性能，查了查，大概解释就是每次滚动都会有一个默认事件触发，加了这个就是告诉浏览器，不需要查询，不需要触发这个默认事件preventDefault：
 
@@ -189,7 +203,7 @@ v-modeil不用多说，输入框改变，这个数据就会改变，lazy这个�
 <div v-on:scroll.passive="onScroll">...</div>
 ```
 
-.native：
+###### .native：
 
 组件绑定当前组件的事件是不会触发的，需要用native才能触发：
 
@@ -205,7 +219,7 @@ v-modeil不用多说，输入框改变，这个数据就会改变，lazy这个�
 <button @click.right="test">test</button>
 ```
 
-.keyCode：
+###### .keyCode：
 
 监听按键的指令，具体可以查看vue的键码对应表：
 
@@ -217,7 +231,7 @@ v-modeil不用多说，输入框改变，这个数据就会改变，lazy这个�
 
 注意，只有你点击过一次或者聚焦到这个输入框才能使用键盘触发。
 
-.exact：
+###### .exact：
 
 系统修饰键，只有按着这个键然后用鼠标点击才会触发，官网解释：
 
@@ -236,7 +250,7 @@ v-modeil不用多说，输入框改变，这个数据就会改变，lazy这个�
 
 但是我试了一下没有用。
 
-.sync
+###### .sync
 
 对prop进行双向绑定，个人暂时用不习惯：
 
@@ -252,7 +266,7 @@ this.$emit('update:fatest,sontest);
 
 ### 三、计算属性和侦听器
 
-##### 基础例子
+#### 1. 基础例子
 
 ```js
 <div id="example">
@@ -283,7 +297,7 @@ this.$emit('update:fatest,sontest);
 
 我们可以将同一函数定义为一个方法而不是一个计算属性。两种方式的最终结果确实是完全相同的。然而，不同的是**计算属性是基于它们的响应式依赖进行缓存的**。只在相关响应式依赖发生改变时它们才会重新求值。这就意味着只要 `message` 还没有发生改变，多次访问 `reversedMessage` 计算属性会立即返回之前的计算结果，而不必再次执行函数。
 
-##### 侦听属性
+#### 2. 侦听属性
 
 Vue 提供了一种更通用的方式来观察和响应 Vue 实例上的数据变动：**侦听属性**。当你有一些数据需要随着其它数据变动而变动时，你很容易滥用 `watch`——特别是如果你之前使用过 AngularJS。然而，通常更好的做法是使用计算属性而不是命令式的 `watch` 回调。细想一下这个例子：
 
@@ -358,7 +372,7 @@ watch:{
 
 - watch一般用于监控路由、input输入框的值特殊处理等等，它比较适合的场景是一个数据影响多个数据
 
-##### 计算属性的 `getter` 和 `setter`
+#### 3. 计算属性的 `getter` 和 `setter`
 
 计算属性 `computed` 里面还有两个方法，一个 `get`，一个 `set` 。
 
@@ -407,7 +421,15 @@ var vm2 = new Vue({
 })
 ```
 
-##### 侦听器
+**注：计算属性一般是没有set方法的**
+
+#### 4. 计算属性和 `methods` 的对比
+
+计算属性的性能比 `methods` 要高
+
+因为计算属性有一个缓存的作用，当遇到反复调用一个东西时它进行检查是否发生改变，若没有发生改变，将不会反复的循环调用，而是直接引用上一次的结果。
+
+#### 5. 侦听器
 
 虽然计算属性在大多数情况下更合适，但有时也需要一个自定义的侦听器。这就是为什么 Vue 通过 `watch` 选项提供了一个更通用的方法，来响应数据的变化。当需要在数据变化时执行异步或开销较大的操作时，这个方式是最有用的。
 
@@ -469,7 +491,7 @@ var vm2 = new Vue({
 
 ### 四、class 和 style 绑定
 
-##### 绑定 HTML Class
+#### 绑定 HTML Class
 
 ```js
 <div id="app">
@@ -545,7 +567,7 @@ HTML 将被渲染为：
 
 ### 五、列表渲染
 
-#### `v-for` 的使用
+#### 1. `v-for` 的使用
 
 **当 `v-if` 与 `v-for` 一起使用时，`v-for` 具有比 `v-if` 更高的优先级。**
 
@@ -584,15 +606,15 @@ HTML 将被渲染为：
 
 在遍历对象时，会按 `Object.keys()` 的结果遍历，但是**不能**保证它的结果在不同的 JavaScript 引擎下都一致。
 
-#### 维护状态
+#### 2. 维护状态
 
 建议尽可能在使用 `v-for` 时提供 `key` attribute，除非遍历输出的 DOM 内容非常简单，或者是刻意依赖默认行为以获取性能上的提升。因为它是 Vue 识别节点的一个通用机制，`key` 并不仅与 `v-for` 特别关联。后面我们将在指南中看到，它还具有其它用途。
 
 不要使用对象或数组之类的非基本类型值作为 `v-for` 的 `key`。请用字符串或数值类型的值。
 
-#### 数组更新检测
+#### 3. 数组更新检测
 
-##### 变更方法
+##### 3.1 变更方法
 
 Vue 将被侦听的数组的变更方法进行了包裹，所以它们也将会触发视图更新。这些被包裹过的方法包括：
 
@@ -610,7 +632,7 @@ Vue 将被侦听的数组的变更方法进行了包裹，所以它们也将会�
 
 你可以打开控制台，然后对前面例子的 `items` 数组尝试调用变更方法。比如 `example1.items.push({ message: 'Baz' })`。
 
-##### 替换数组
+##### 3.2 替换数组
 
 变更方法，顾名思义，会变更调用了这些方法的原始数组。相比之下，也有非变更方法，例如 `filter()`、`concat()` 和 `slice()`。它们不会变更原始数组，而**总是返回一个新数组**。当使用非变更方法时，可以用新数组替换旧数组：
 
@@ -629,11 +651,11 @@ example1.items = example1.items.filter(function (item) {
 | concat | concat() 方法用于连接两个或多个数组。该方法不会改变现有的数组 |
 | slice  | slice() 方法可从已有的数组中返回选定的元素。该方法并不会修改数组，而是返回一个子数组 |
 
-##### 注意事项
+##### 3.3 注意事项
 
 由于 JavaScript 的限制，Vue **不能检测**数组和对象的变化。[深入响应式原理](https://cn.vuejs.org/v2/guide/reactivity.html#检测变化的注意事项)中有相关的讨论。
 
-#### 在 `<template>` 上使用 `v-for`
+#### 4. 在 `<template>` 上使用 `v-for`
 
 类似于 `v-if`，你也可以利用带有 `v-for` 的 `<template>` 来循环渲染一段包含多个元素的内容。比如：
 
@@ -646,15 +668,15 @@ example1.items = example1.items.filter(function (item) {
 </ul>
 ```
 
-####  `v-for` 与 `v-if` 一起使用
+####  5. `v-for` 与 `v-if` 一起使用
 
 注意我们**不**推荐在同一元素上使用 `v-if` 和 `v-for`。
 
-当它们处于同一节点，`v-for` 的优先级比 `v-if` 更高，这意味着 `v-if` 将分别重复运行于每个 `v-for` 循环中。当你只想为*部分*项渲染节点时，这种优先级的机制会十分有用
+当它们处于同一节点，`v-for` 的优先级比 `v-if` 更高，这意味着 `v-if` 将分别重复运行于每个 `v-for` 循环中。当你只想为**部分**项渲染节点时，这种优先级的机制会十分有用
 
 而如果你的目的是有条件地跳过循环的执行，那么可以将 `v-if` 置于外层元素 (或 `<template>`) 上。
 
-#### 在组件上使用 `v-for`
+#### 6. 在组件上使用 `v-for`
 
 在自定义组件上，你可以像在任何普通元素上一样使用 `v-for`。
 
@@ -738,17 +760,17 @@ example1.items = example1.items.filter(function (item) {
 
 ### 六、事件处理
 
-#### 事件修饰符
+#### 1. 事件修饰符
 
 在事件处理程序中调用 `event.preventDefault()` 或 `event.stopPropagation()` 是非常常见的需求。尽管我们可以在方法中轻松实现这点，但更好的方式是：方法只有纯粹的数据逻辑，而不是去处理 DOM 事件细节。
 
 为了解决这个问题，Vue.js 为 `v-on` 提供了**事件修饰符**。之前提过，修饰符是由点开头的指令后缀来表示的。
 
-- `.stop`
-- `.prevent`
-- `.capture`
-- `.self`
-- `.once`
+- `.stop`：阻止单击事件继续传播（阻止事件冒泡）
+- `.prevent`：提交事件不再重载页面
+- `.capture`：添加事件监听器时使用事件捕获模式
+- `.self`：只当在 `event.target` 是当前元素自身时触发处理函数
+- `.once`：点击事件将只会触发一次
 - `.passive`
 
 ```html
@@ -786,7 +808,7 @@ example1.items = example1.items.filter(function (item) {
 
 > 使用修饰符时，顺序很重要；相应的代码会以同样的顺序产生。因此，用 `v-on:click.prevent.self` 会阻止**所有的点击**，而 `v-on:click.self.prevent` 只会阻止对元素自身的点击。
 
-#### 按键修饰符
+#### 2. 按键修饰符
 
 在监听键盘事件时，我们经常需要检查详细的按键。Vue 允许为 `v-on` 在监听键盘事件时添加按键修饰符：
 
@@ -803,7 +825,7 @@ example1.items = example1.items.filter(function (item) {
 
 在上述示例中，处理函数只会在 `$event.key` 等于 `PageDown` 时被调用。
 
-##### 按键码
+##### 2.1 按键码
 
 `keyCode` 的事件用法[已经被废弃了](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode)并可能不会被最新的浏览器支持。
 
@@ -834,13 +856,20 @@ example1.items = example1.items.filter(function (item) {
 Vue.config.keyCodes.f1 = 112
 ```
 
-#### 为什么在 HTML 中监听事件
+#### 3. 为什么在 HTML 中监听事件
 
 这种事件监听的方式违背了关注点分离 (separation of concern) 这个长期以来的优良传统。但不必担心，因为所有的 Vue.js 事件处理方法和表达式都严格绑定在当前视图的 ViewModel 上，它不会导致任何维护上的困难。实际上，使用 `v-on` 有几个好处：
 
 1. 扫一眼 HTML 模板便能轻松定位在 JavaScript 代码里对应的方法。
 2. 因为你无须在 JavaScript 里手动绑定事件，你的 ViewModel 代码可以是非常纯粹的逻辑，和 DOM 完全解耦，更易于测试。
 3. 当一个 ViewModel 被销毁时，所有的事件处理器都会自动被删除。你无须担心如何清理它们。
+
+#### 4. 调用 `event` 对象
+
+**注意：**
+
+1. 在事件定义时，写方法时省略了小括号，但是方法本身是需要一个参数的，这个时候 `Vue` 会默认将浏览器产生的 `event` 事件对象作为参数传入到方法。
+2. 方法定义时，如果我们既需要 `event` 对象，又需要其他的参数对象，在调用方法时，通过 `$event` 获取浏览器的参数对象 `event`。
 
 ### 七、表单输入绑定
 
@@ -1200,7 +1229,7 @@ Vue.component('blog-post', {
 同时子组件可以通过调用内建的 [**`$emit`** 方法](https://cn.vuejs.org/v2/api/#vm-emit)并传入事件名称来触发一个事件：
 
 ```html
-<button v-on:click="$emit('enlarge-text')">
+<button @click="$emit('enlarge-text')">
   Enlarge text
 </button>
 ```
@@ -1260,7 +1289,99 @@ Vue.component('custom-input', {
 
 到目前为止，关于组件自定义事件你需要了解的大概就这些了，如果你阅读完本页内容并掌握了它的内容，我们会推荐你再回来把[自定义事件](https://cn.vuejs.org/v2/guide/components-custom-events.html)读完。
 
-#### 五、兄弟之间传值
+#### 五、父组件与子组件
+
+##### 1. 父组件访问子组件
+
+使用 `$children` 或者 `$refs` ，一般使用的是 `$refs` ，使用 `$refs` 的时候必须先在标签上写上 `ref='**'` 
+
+```html
+<body>
+  <div id="app">
+    <cpn ref="a"></cpn>
+    <cpn ref="b"></cpn>
+    <cpn ref="c"></cpn>
+    <button @click="btnClick">按钮</button>
+  </div>
+
+  <template id="cpn">
+    <h2>这是一个段落</h2>
+  </template>
+
+  <script src="../js/vue.js"></script>
+  <script>
+    const app = new Vue({
+      el: "#app",
+      data: {
+        message: 'hello',
+      },
+      methods: {
+        btnClick() {
+          // console.log(this.$children);
+          // this.$children[0].showMessage();
+          console.log(this.$refs.a);
+          this.$refs.a.showMessage();
+        }
+      },
+      components: {
+        cpn: {
+          template: "#cpn",
+          methods: {
+            showMessage() {
+              console.log('showMessage');
+            }
+          }
+        }
+      }
+    })
+  </script>
+</body>
+```
+
+##### 2. 子组件访问父组件
+
+使用 `$parent` 
+
+```html
+<body>
+  <div id="app">
+    <cpn></cpn>
+  </div>
+
+  <template id="cpn">
+    <div>
+      <h2>子组件</h2>
+      <button @click="btnClick">按钮</button>
+    </div>
+  </template>
+
+  <script src="../js/vue.js"></script>
+  <script>
+    const app = new Vue({
+      el: "#app",
+      data: {
+        message: 'hello'
+      },
+      components: {
+        cpn: {
+          template: "#cpn",
+          methods: {
+            btnClick() {
+              console.log(this.$parent);
+            }
+          }
+        }
+      }
+    })
+  </script>
+</body>
+```
+
+##### 3. 访问 vue 根组件
+
+使用 `$root`
+
+#### 六、兄弟之间传值
 
 - 兄弟之间传递数据需要借助于事件中心，通过事件中心传递数据   
   - 提供事件中心    var hub = new Vue()
@@ -1355,7 +1476,7 @@ Vue.component('custom-input', {
   </script>
 ```
 
-#### 六、组件插槽
+#### 七、组件插槽
 
 组件的最大特性就是复用性，而用好插槽能大大提高组件的可复用能力
 
@@ -2587,7 +2708,7 @@ import "./test2.js";
    - 其中，`test` 表示匹配的文件类型，`use` 表示对应要调用的 `loader`
    - **注意**
      - `use` 数组中指定的 `loader` 顺序是固定的
-     - 多个 `loader` 的调用顺序是：从前往后调用
+     - 多个 `loader` 的调用顺序是：从后向前调用
 
 ###### 2、安装 `less,less-loader` 处理 `less文件`
 
