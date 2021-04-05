@@ -2368,6 +2368,12 @@ const router = new VueRouter({
 
 #### 4、命名路由以及编程式导航
 
+##### 路由占位符
+
+```html
+<router-view />
+```
+
 ##### 命名路由
 
 ```js
@@ -2394,6 +2400,102 @@ this.$router.push({ path:"/login",query:{username:"jack"} });
 this.$router.go( n );//n为数字，参考history.go
 this.$router.go( -1 );// 后退
 ```
+
+##### 导航守卫
+
+- 动态修改 `title` 
+
+  ```js
+  // 路由设置
+  routes = [{
+    path: "/profile",
+    component: Profile,
+    meta: {
+      title: "档案"
+    },
+  } /* ... */ ]
+  // 路由导航守卫 --> 从 from 跳转到 to
+  router.beforeEach((to, from, next) => {
+    // 动态修改 title
+    document.title = to.matched[0].meta.title;
+    console.log(to);
+    next();
+  })
+  ```
+
+- 登录页设置
+
+  ```js
+  /**
+   * 挂载路由导航守卫，to表示将要访问的路径，from表示从哪里来，next是下一个要做的操作
+   * next() 放行
+   * next('/xxx') 强制跳转到 xxx 页
+   */
+  router.beforeEach((to, from, next) => {
+    // ${//to and from are Route Object,next() must be called to resolve the hook}
+    // 如果用户访问登录页,直接放行
+    if (to.path === '/login') return next()
+    // 从 sessionStorage 中获取保存的 token 值
+    const tokenStr = window.sessionStorage.getItem('token')
+    // 没有 token 将强制跳转到登录页
+    if (!tokenStr) return next('login')
+    next()
+  })
+  ```
+
+#### 5、vue-router配置
+
+```js
+// 配置路由相关信息
+import VueRouter from 'vue-router'
+import Vue from 'vue'
+
+import Home from '../components/Home'
+import About from '../components/About'
+
+// 1. 通过 Vue.use(插件), 安装插件
+Vue.use(VueRouter)
+
+// 2. 创建 VueRouter 对象
+const routes = [{
+  path: '/home',
+  component: Home
+}, {
+  path: '/about',
+  component: About
+}]
+const router = new VueRouter({
+  // 配置路由和组件之间的应用关系
+  routes
+})
+
+// 3. 将 router 对象传入到 Vue 实例
+export default router
+```
+
+- 更改为 `history` 模式
+
+  ```js
+  const router = new VueRouter({
+    // 配置路由和组件之间的应用关系
+    routes,
+    mode: 'history'
+  })
+  ```
+
+
+#### 6、【重点】vue.\$router 和 vue.\$route 的区别
+
+- `$router` 为 `VueRouter` 的实例，想要导航到不同的 URL，则使用 `$router.push` 方法
+- `$route` 为当前 `route` 跳转对象里面可以获取 `name`，`path`，`query`，`params` 等
+
+#### 7、keep-alive 组件
+
+- keep-alive 是 Vue 内置的一个组件，可以使被包含的组件保留状态，或避免重新渲染。
+- router-view 也是一个组件，如果直接被包在 keep-alive 里面，所有路径匹配到的视图组件都会被缓存
+- 属性
+  - `exclude` ： 字符串或正则表达式，任何匹配的组件都不会被缓存，即排除某一个或多个页面不进行 keep-alive，若有多个页面以逗号（`,`）分隔
+  - `include` ：字符串或正则表达，只有匹配的组件会被缓存
 
 ### 十三、前端模块化
 
@@ -2834,13 +2936,54 @@ import "./test2.js";
 ##### 1. vue-cli2
 
 - vue-cli2 详解
-- ![](./笔记图片/vue-cli2详解.png)
+  - ![](./笔记图片/vue-cli2详解.png)
 - 目录结构
-- ![](./笔记图片/cli2目录结构.png)
+  - ![](./笔记图片/cli2目录结构.png)
 
-##### 2. runtimecompiler 和 runtime-only 的区别
+##### 2. vue-cli3
 
-- 
+- vue-cli3 和 vue-cli2 的区别
+  - vue-cli 3 是基于 webpack 4 打造，vue-cli 2 还是 webapck 3
+  - vue-cli 3 的设计原则是“0配置”，移除的配置文件根目录下的，build和config等目录
+  - vue-cli 3 提供了 vue ui 命令，提供了可视化配置，更加人性化
+  - 移除了static文件夹，新增了public文件夹，并且index.html移动到public中
+- 目录结构
+  - ![](./笔记图片/cli3目录结构.png)
+
+##### 3. runtimecompiler 和 runtime-only 的区别
+
+- `runtimecompiler`
+
+  - `template -> ast -> render -> vDom -> UI`
+
+- `runtime-only`
+
+  - `render -> vDom` 
+    - 1、性能更高
+    - 2、代码量更少
+
+- `render` 函数（vue 中）
+
+  ```js
+  // 1. 普通用法
+  render: createElement => createElement('h1',
+    { class: 'box' },
+    ['123', createElement('button', ['按钮'])])
+  
+  // 2. 传入组件对象
+  import App from './App'
+  render: createElement => createElement(App)
+  ```
+
+- `.vue` 文件中的 `<template>` 是由 `vue-template-compiler` 解析的
+
+##### 4. npm run build
+
+![](./笔记图片/npm_run_build.png)
+
+##### 5. npm run dev
+
+![](./笔记图片/npm_run_dev.png)
 
 #### 5、`Vue`
 
