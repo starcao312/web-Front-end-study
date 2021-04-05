@@ -2627,7 +2627,9 @@ import "./test2.js";
 
 ##### 6、配置 `html-webpack-plugin`
 
-- 使用html-webpack-plugin 可以生成一个预览页面。
+- 使用 html-webpack-plugin 可以生成一个预览页面。
+
+- `webpack5+` 与 `html-webpack-plugin` 不兼容，需要 `webpack` 降级至 4.x 版本
 
 - 实现默认预览页面功能的步骤如下：
 
@@ -2827,7 +2829,20 @@ import "./test2.js";
    }
    ```
 
-#### 4、`Vue`
+#### 4、Vue-cli
+
+##### 1. vue-cli2
+
+- vue-cli2 详解
+- ![](./笔记图片/vue-cli2详解.png)
+- 目录结构
+- ![](./笔记图片/cli2目录结构.png)
+
+##### 2. runtimecompiler 和 runtime-only 的区别
+
+- 
+
+#### 5、`Vue`
 
 ##### 1、Vue单文件组件
 
@@ -2980,7 +2995,7 @@ module.exports = {
 }
 ```
 
-#### 5、`Element-UI` 的基本使用
+#### 6、`Element-UI` 的基本使用
 
 - 概述
   - `Element-UI`：一套基于2.0的桌面端组件库

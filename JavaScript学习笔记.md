@@ -3841,7 +3841,13 @@ module.exports = {
 
 - 打包 js 文件中的高级语法（`babel-loader`）
 
+  - `npm install babel-loader babel-core babel-preset-env webpack`
+  - `env`: `environment`（环境）
   - 
+
+#### 三、配置 Vue
+
+-  如果既有 el 挂载，又有 template，编译时会直接把 template 的内容替换掉原来的 <div>
 
 
 
