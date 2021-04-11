@@ -3163,11 +3163,105 @@ module.exports = {
   - 搜索 `vue-cli-plugin-element` 并安装
   - 配置插件，实现按需导入，从而减少打包后项目的体积
 
+### 十四、VueX
 
+#### 1. 基础
 
+- Vuex 是一个专为 Vue.js 应用程序开发的状态管理模式
 
+#### 2、State
 
+- 保存共享状态的地方
+- 单一状态树
+  - 英文名称是Single Source of Truth，也可以翻译成单一数据源
 
+#### 3、Getters
+
+- 类似于组件中的计算属性
+
+#### 4、Mutations
+
+- Vuex的store状态的更新唯一方式：提交Mutations
+
+- 提交 Mutation 的方式：
+
+  ```js
+  // xx.vue （普通的提交风格）
+  addCount(num) {
+    this.$store.commit('incrementCount', num);
+  }
+  
+  // store/index.js
+  incrementCount(state, num) {
+    this.state.counter += num;
+  }
+  
+  // 特殊的提交风格
+  addCount(num) {
+    this.$store.commit({
+      type: 'incrementCount',
+      num
+    });
+  }
+  
+  // store/index.js
+  incrementCount(state, payload) {
+    this.state.counter += payload.num;
+  }
+  ```
+
+- Mutations主要包括两部分：
+
+  - 字符串的事件类型（type）
+  - 一个回调函数（handler）,该回调函数的第一个参数就是state。
+
+- 传参
+
+  - 参数被称为是 mutations 的载荷(Payload)
+  - 如果需要传递多个参数，通常会以对象的形式传递, 也就是payload是一个对象
+
+- 通常情况下, Vuex要求我们 Mutations 中的方法必须是同步方法
+
+#### 5、Action
+
+- 做异步操作
+
+  ```js
+  // xxx.vue
+  updateInfo() {
+    // this.$store.commit('updateInfo');
+    this.$store
+      .dispatch('aUpdateInfo', '这是 payload')
+      .then((resolve, reject) => {
+      console.log('完成了提交');
+      console.log(resolve);
+    });
+  }
+  
+  // store/index.js 的 action
+  aUpdateInfo(context, payload) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        context.commit('updateInfo');
+        console.log('打印 payload：', payload);
+        resolve('resolve 返回');
+      }, 1000);
+    });
+  }
+```
+  
+
+#### 6、Module
+
+- Vuex允许我们将store分割成模块(Module), 而每个模块拥有自己的state、mutations、actions、getters等
+- 我们在 moduleA 中添加 state、mutations、getters
+- mutations 和 getters 接收的第一个参数是局部状态对象
+- 注意：
+  - 虽然, 我们的 `doubleCount` 和 `increment` 都是定义在对象内部的，但是在调用的时候, 依然是通过 `this.$store` 来直接调用的.
+
+#### 7、store 目录结构
+
+![目录结构](./笔记图片/目录结构.png)
 
 ### 附录一、vue指令学习
 
