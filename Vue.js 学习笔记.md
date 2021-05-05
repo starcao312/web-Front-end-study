@@ -1,4 +1,4 @@
-## Vue.js 学习笔记
+Vue.js 学习笔记
 
 ### 一、Vue实例
 
@@ -1090,7 +1090,7 @@ data: function () {
 
 通常一个应用会以一棵嵌套的组件树的形式来组织：
 
-![Component Tree](./笔记图片/components.png)
+![Component Tree](https://gitee.com/fromStartToEnd/image-hosting-service/raw/master/img/components.png)
 
 例如，你可能会有页头、侧边栏、内容区等组件，每个组件又包含了其它的像导航链接、博文之类的组件。
 
@@ -2936,9 +2936,9 @@ import "./test2.js";
 ##### 1. vue-cli2
 
 - vue-cli2 详解
-  - ![](./笔记图片/vue-cli2详解.png)
+  - ![](https://gitee.com/fromStartToEnd/image-hosting-service/raw/master/img/vue-cli2详解.png)
 - 目录结构
-  - ![](./笔记图片/cli2目录结构.png)
+  - ![](https://gitee.com/fromStartToEnd/image-hosting-service/raw/master/img/cli2目录结构.png)
 
 ##### 2. vue-cli3
 
@@ -2948,7 +2948,7 @@ import "./test2.js";
   - vue-cli 3 提供了 vue ui 命令，提供了可视化配置，更加人性化
   - 移除了static文件夹，新增了public文件夹，并且index.html移动到public中
 - 目录结构
-  - ![](./笔记图片/cli3目录结构.png)
+  - ![](https://gitee.com/fromStartToEnd/image-hosting-service/raw/master/img/cli3目录结构.png)
 
 ##### 3. runtimecompiler 和 runtime-only 的区别
 
@@ -2979,11 +2979,11 @@ import "./test2.js";
 
 ##### 4. npm run build
 
-![](./笔记图片/npm_run_build.png)
+![](https://gitee.com/fromStartToEnd/image-hosting-service/raw/master/img/npm_run_build.png)
 
 ##### 5. npm run dev
 
-![](./笔记图片/npm_run_dev.png)
+![](https://gitee.com/fromStartToEnd/image-hosting-service/raw/master/img/npm_run_dev.png)
 
 #### 5、`Vue`
 
@@ -3289,10 +3289,10 @@ module.exports = {
 
       ```js
       <h1 v-if="awesome">Vue is awesome!</h1>
-      ```
+```
 
       也可以用 `v-else` 添加一个“else 块”：
-
+    
       ```js
       <h1 v-if="awesome">Vue is awesome!</h1>
       <h1 v-else>Oh no 😢</h1>
@@ -3470,7 +3470,12 @@ module.exports = {
 
    - get和post都是基于promise的所以写法上很相似，是用then和catch，使用这种方法来进行发送请求。
 
-9. 拦截器
+9. `axios` 全局设置
+
+   - `axios.defaults.baseURL = '127.0.0.1:8080'`
+   - `axios.defaults.headers.post['Content-Type'] = 'applocation/x-www-form-urlencoded'`
+
+10. 拦截器
 
    - 在请求或响应被 `then` 或 `catch` 处理前拦截它们（拦截器可以做什么：在请求或者响应时拦截下来进行处理）
    - 拦截器分为请求拦截器和响应拦截器
@@ -3497,25 +3502,25 @@ module.exports = {
      });
    ```
 
-10. 拦截器的工作流程：
+11. 拦截器的工作流程：
 
-    ![img](.\笔记图片\拦截器.png)
+    ![img](https://gitee.com/fromStartToEnd/image-hosting-service/raw/master/img/拦截器.png)
 
-11. 移除拦截器
+12. 移除拦截器
 
     ```javascript
     var myInterceptor = axios.interceptors.request.use(function () {/*...*/});
     axios.interceptors.request.eject(myInterceptor);
     ```
 
-12. 自定义 `axios` 实例添加拦截器
+13. 自定义 `axios` 实例添加拦截器
 
     ```javascript
     var instance = axios.create();
     instance.interceptors.request.use(function () {/*...*/});
     ```
 
-13. 错误处理
+14. 错误处理
 
     ```javascript
     axios.get('/user/12345')
@@ -3533,4 +3538,4 @@ module.exports = {
       });
     ```
 
-14. https://www.jianshu.com/p/d771bbc61dab
+15. https://www.jianshu.com/p/d771bbc61dab
