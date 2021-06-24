@@ -3248,8 +3248,7 @@ module.exports = {
       }, 1000);
     });
   }
-```
-  
+  ```
 
 #### 6、Module
 
@@ -3289,14 +3288,13 @@ module.exports = {
 
       ```js
       <h1 v-if="awesome">Vue is awesome!</h1>
-```
 
       也可以用 `v-else` 添加一个“else 块”：
     
       ```js
       <h1 v-if="awesome">Vue is awesome!</h1>
       <h1 v-else>Oh no 😢</h1>
-      ```
+```
 
    2. v-show 与 v-if 的区别：
       1. 手段：v-if是通过控制dom节点的存在与否来控制元素的显隐；v-show是通过设置DOM元素的display样式，block为显示，none为隐藏；
